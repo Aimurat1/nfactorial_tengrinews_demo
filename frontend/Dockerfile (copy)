@@ -1,0 +1,23 @@
+# Dockerfile located in ./frontend/Dockerfile
+
+# Stage 1: Build the application
+FROM node:lts-alpine as builder
+
+WORKDIR /app
+
+COPY package.json pnpm-lock.yaml ./
+
+RUN npm install -g pnpm
+
+RUN pnpm install
+
+COPY . .
+
+ENV NODE_OPTIONS=--max-old-space-size=4096
+
+RUN pnpm run build
+
+# Expose the port your app runs on
+EXPOSE 3000
+
+CMD [ "vite", "preview", "--port", "3000", "--host" ]
