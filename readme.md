@@ -16,7 +16,7 @@ nFactorial demo task for 2nd round - Tengrinews Clone with parsing.
 
 ## Installation
 
-You need to install docker and docker-compose to your local machine!
+You need to install docker and docker-compose to your local machine! Local version use PostgreSQL database from demo website for synchronization of data.
 
 For initial installation:
 
