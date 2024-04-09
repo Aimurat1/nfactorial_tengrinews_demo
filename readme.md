@@ -6,7 +6,12 @@ nFactorial demo task for 2nd round - Tengrinews Clone with parsing.
 
 ## Demo
 
-Insert gif or link to demo
+[Демо версия сайта](http://158.160.62.15/) - http://158.160.62.15/
+
+[Админ панель Django](http://158.160.62.15:8000/admin/) - http://158.160.62.15:8000/admin/
+
+- Логин - admin
+- Пароль - qwerty 
 
 
 ## Installation
