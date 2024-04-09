@@ -31,7 +31,8 @@ DEBUG = True
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.vercel.app',
     'localhost:80',
-    '127.0.0.1:80', 'backend', 'frontend'
+    '127.0.0.1:80', 'backend', 'frontend',
+    '158.160.62.15'
 ]
 
 
