@@ -9,29 +9,17 @@ services:
       POSTGRES_DB_NAME: ${POSTGRES_DB_NAME}
       POSTGRES_DB_USER: ${POSTGRES_DB_USER}
       POSTGRES_DB_PASSWORD: ${POSTGRES_DB_PASSWORD}
-      POSTGRES_DB_HOST: postgres
+      POSTGRES_DB_HOST: ${POSTGRES_DB_HOST}
       POSTGRES_DB_PORT: ${POSTGRES_DB_PORT}
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
     ports:
       - "8000:8000"
     depends_on:
-      - postgres
+      # - postgres
       - redis
       - celery
       - celerybeat
-
-
-  # frontend:
-  #   build:
-  #     context: . # Docker context set to the base directory
-  #     dockerfile: frontend/Dockerfile # Path to the Dockerfile
-  #   ports:
-  #     - "3000:3000" # Expose the app on port 3000
-  #   volumes:
-  #     - ./frontend:/app # Mount the frontend directory to the container's app directory
-  #   environment:
-  #     - NODE_ENV=production
 
   frontend:
     build:
@@ -42,23 +30,22 @@ services:
       - "80:3000"
     environment:
       - NODE_ENV=production
-      # - PUBLIC_BACKEND_URL=http://backend:8000
     volumes:
       - ./frontend:/app
     depends_on:
       - backend
 
-  postgres:
-    image: postgres:latest
-    restart: always
-    environment:
-      POSTGRES_USER: ${POSTGRES_DB_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_DB_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB_NAME}
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./data:/var/lib/postgresql/data
+  # postgres:
+  #   image: postgres:latest
+  #   restart: always
+  #   environment:
+  #     POSTGRES_USER: ${POSTGRES_DB_USER}
+  #     POSTGRES_PASSWORD: ${POSTGRES_DB_PASSWORD}
+  #     POSTGRES_DB: ${POSTGRES_DB_NAME}
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - ./data:/var/lib/postgresql/data
 
   redis:
     image: redis:latest
@@ -68,13 +55,12 @@ services:
   celery:
     build:
       context: ./backend
-    # command: python -m celery -A nfactorial worker -l debug
     command: celery -A nfactorial worker --loglevel=info
     volumes:
       - ./backend:/backend
     depends_on:
       - redis
-      - postgres
+      # - postgres
     environment:
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
@@ -82,20 +68,15 @@ services:
   celerybeat:
     build:
       context: ./backend
-    # command: python -m celery -A nfactorial beat --pidfile= -l debug
     command: celery -A nfactorial beat --loglevel=info
-
-    # command: celery -A nfactorial beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
     volumes:
       - ./backend:/backend
     depends_on:
       - redis
-      - postgres
+      # - postgres
     environment:
       CELERY_RESULT_BACKEND: redis://redis:6379/0
       CELERY_BROKER_URL: redis://redis:6379/0
-
-
 
 volumes:
   static_volume:
